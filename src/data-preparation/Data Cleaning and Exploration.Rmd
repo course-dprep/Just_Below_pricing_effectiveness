@@ -1,0 +1,220 @@
+---
+title: "The distribution of just-Below pricing"
+author: "Anne van der Vliet"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+```
+
+
+```{r warning=FALSE, include=FALSE}
+#load needed packages
+library(tidyverse)
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(extrafont)
+```
+
+### Download dataset
+Download dataset from: https://www.kaggle.com/datasets/asaniczka/amazon-uk-products-dataset-2023 
+and save in the working directory folder.
+
+```{r warning=FALSE, include=FALSE}
+#import dataset
+Amazon_UK <- read_csv("amz_uk_processed_data.csv")
+```
+
+## Research motivation
+$2.99 for a chocolate bar, $19.99 for a sweater, $1199.99 for a smartphone, and even $29,999.99 for a car – prices set just below a round number are widely present around the globe (Tripathi & Pandey, 2018). A recent pilot study, including over 12.000 prices from web pages in the United States and Germany concluded that these prices make up almost 65% of prices on the internet (Troll et al., 2024), highlighting the popularity of this strategy. One explanation for the popularity is that just-below prices lead to an underestimation effect, where prices ending in $.99 (e.g., $14.99) are perceived as substantially lower than their round counterparts, positively affecting demand (Chang & Chen, 2014). As a result, one might argue that it is beneficial for price-setters to price their products and services just below the round number. 
+
+However, results regarding the effectiveness of just-below pricing are mixed. Where studies conclude that just-below pricing has a positive effect on consumers' purchase decisions (Choi et al., 2014; Schindler & Kibarian, 2001), others report no or even a negative effect (Georgoff, 1972, Kim, Malkoc & Goodman, 2021; Tripathi & Pandey, 2018). As a result, for this project, we investigated the effectiveness of just-below pricing on consumers' purchase decisions by analyzing a large Amazon dataset from the UK consisting of more than 2 million products. In addition, it was tested whether this effect differed based on the price level of the product. By investigating the moderating effect of price level, possible reasons for the conflicting findings might be found, which adds to the existing knowledge regarding just-below pricing.
+
+These insights are of vital interest to price-setters who are contemplating the use of just-below pricing to drive demand. Specifically, the article provides answers to when and why the use of just-below pricing might (not) be preferred in a given context, providing price-setters with the needed information on how to price their goods.
+
+### Research question
+**To what extent does just below pricing (as opposed to round pricing) affect consumers' purchase behavior and to what extent does this effect depend on the price level of the product?**  
+
+## Research method
+First, the data will be prepared for the analysis by removing missing and inaccurately recorded data. In addition, the variables needed for the analysis will be operationalized. Next, the data will be explored using ggplot and going over the summary statistics. Finally, the research question will be answered via the use of a multiple linear regression. A multiple linear regression is a suitable method as (1) it can deal with the measurement levels of the variables, (2) analyzes all the variables at ones, and (3) allows us to include control variables if deemed needed. 
+
+## Data Description
+For this project, a large dataset from Kaggle (https://www.kaggle.com/) was used, consisting of `r nrow(Amazon_UK)` Amazon products from the UK. The data was scraped in October 2023  and included the following variables:
+
+```{r warning=FALSE, include=FALSE}
+#give overview of variables and descriptions
+table <- data.frame(`Variable` = c("ID", "Title", "I_URL", "P_URL", "Rating", 
+                                   "Reviews", "Price", "BestSeller", "Sales", 
+                                   "Category"), 
+                    `Description` = c("Product ID from Amazon", 
+                                      "Title of the product", 
+                                      "URL of the product image", 
+                                      "URL of the product", 
+                                      "Product rating", 
+                                      "Number of reviews", 
+                                      "Current price of the product", 
+                                      "Whether the product had a Amazon BestSeller status or not", 
+                                      "Number of products sold in the last month", "Product category"),
+                    stringsAsFactors = FALSE
+)
+
+kable(table, format = "markdown")
+```
+
+## Data cleaning
+```{r warning=FALSE}
+#Prices of 0 removed as this meant no pricing information was available
+Amazon_UK <- Amazon_UK %>% filter(price >= 0.01)
+#outlier detection per product category
+quantile(Amazon_UK$price, .01)
+ 
+quantile(Amazon_UK$price, .001)
+
+Amazon_UK %>% group_by(categoryName) %>% summarize(q001=quantile(price, .001))
+```
+
+## Variable operationalization
+```{r warning=FALSE}
+#Price ending
+Amazon_UK <- Amazon_UK %>%  mutate(higher_price = ceiling(price))
+Amazon_UK <- Amazon_UK %>%  mutate(below_price = higher_price-price)
+Amazon_UK <- Amazon_UK %>%  mutate(price_ending = (1 - below_price))
+Amazon_UK$price_ending <- as.numeric(Amazon_UK$price_ending)
+
+#Just-below vs. Round pricing (+ other)
+Amazon_UK <- Amazon_UK %>%  mutate(price_strategy = case_when(
+    price_ending > 0.9999 ~ "round",
+    price_ending > 0.9899 & price_ending < 1.000 ~ "just-below",
+    TRUE ~ "other"
+  ))
+
+#Price buckets
+Amazon_UK = Amazon_UK %>% mutate(price_bucket = cut(price, c(0,1,5,10,20,50,100, 500, 1000,10000000)))
+
+#Top 10 categories
+categories = unique(Amazon_UK$categoryName)
+categories = Amazon_UK %>% group_by(categoryName) %>% summarize(product_count = n()) %>% mutate(ranking = rank(-product_count)) %>% mutate(top = ranking <= 10)
+categories_filtered = categories %>% filter(top==T) %>% pull(categoryName)
+```
+
+## First look of the data
+```{r echo=FALSE, warning=FALSE}
+summary(Amazon_UK)
+head(Amazon_UK)
+tail(Amazon_UK)
+```
+
+
+### Price ending distribution
+```{r warning=FALSE}
+#Overall distribution price endings
+Amazon_UK %>% ggplot(aes(x = price_ending)) + 
+  geom_bar() +
+  labs(title = "Overall distribution price endings",
+       x = "Price endings",
+       y = "Sum") +
+   theme_bw() +
+    theme(panel.grid = element_blank())
+  
+
+#Zooming in on prices ending in .90 until .00
+Amazon_UK %>% filter(price_ending >= 0.90) %>% 
+  ggplot(aes(x = price_ending)) + 
+  geom_bar() +
+  labs(title = "Distribution price endings .90 until .00",
+       x = "Price endings",
+       y = "Sum") +
+   theme_bw() +
+    theme(panel.grid = element_blank())
+
+Amazon_UK %>% filter(price_ending >= 0.90) %>%
+  filter(categoryName %in% categories_filtered) %>% 
+  ggplot(aes(x = price_ending)) + 
+  geom_bar() +
+  labs(title = "Distribution price endings .90 until .00 top 10 categories",
+       x = "Price endings",
+       y = "Sum") +
+   theme_bw() +
+    theme(panel.grid = element_blank())
+
+#Distribution price endings top 10 categories
+Amazon_UK %>% filter(categoryName %in% categories_filtered) %>% 
+  ggplot(aes(x = price_ending)) + 
+  geom_bar(aes(fill = categoryName)) + 
+  labs(title = "Overall distribution price endings top 10 categories",
+       x = "Price endings",
+       y = "Sum") +
+  facet_wrap(~ categoryName, scales = "free", labeller = label_wrap_gen(width = 10)) +
+   theme_bw() +
+    theme(panel.grid = element_blank()) +
+  theme(axis.text.x = element_text(color = "black", size = 4, angle = 45,
+                                   hjust = 0.5, vjust = 0.5),
+        text = element_text(size = 10))
+
+Amazon_UK %>% filter(price_ending >= 0.90) %>%
+  filter(categoryName %in% categories_filtered) %>% 
+  ggplot(aes(x = price_ending)) + 
+  geom_bar(aes(fill = categoryName)) +
+  labs(title = "Distribution price endings .90 until .00 top 10 categories",
+       x = "Price endings",
+       y = "Sum") +
+  facet_wrap(~ categoryName, scales = "free", labeller = label_wrap_gen(width = 10)) +
+   theme_bw() +
+    theme(panel.grid = element_blank()) +
+  theme(axis.text.x = element_text(color = "black", size = 4, angle = 45,
+                                   hjust = 0.5, vjust = 0.5),
+        text = element_text(size = 10))
+```
+
+### Sales exploration Just-below pricing
+```{r warning=FALSE}
+# Sum sales just-below vs. round vs. other
+Amazon_UK %>% 
+  group_by(price_strategy) %>%
+  summarise(total_sales = sum(boughtInLastMonth)) %>%
+  ggplot(aes(x = price_strategy, y = total_sales, fill = price_strategy)) + 
+  geom_col() + 
+   geom_text(aes(label = scales::comma(total_sales)),
+            vjust = 2,  
+            size = 5) +
+  labs(title = "Total Sales per Pricing Strategy",
+       x = "Price Strategy",
+       y = "Total Sales") +
+  theme_bw() +
+  theme(panel.grid = element_blank(), legend.position = "none")
+
+# Mean sales just-below vs. round vs. other
+Amazon_UK %>% 
+  group_by(price_strategy) %>%
+  summarise(mean_sales = mean(boughtInLastMonth)) %>%
+  ggplot(aes(x = price_strategy, y = mean_sales, fill = price_strategy)) + 
+  geom_col() + 
+   geom_text(aes(label = scales::comma(mean_sales)),
+            vjust = 2,  
+            size = 5) +
+  labs(title = "Mean sales per Pricing Strategy",
+       x = "Price Strategy",
+       y = "Mean Sales") +
+  theme_bw() +
+  theme(panel.grid = element_blank(), legend.position = "none")
+
+# Mean sales excluding those with no sales just-below vs. round vs. other
+Amazon_UK %>% 
+  filter(!boughtInLastMonth == 0) %>% 
+  group_by(price_strategy) %>%
+  summarise(mean_sales = mean(boughtInLastMonth)) %>%
+  ggplot(aes(x = price_strategy, y = mean_sales, fill = price_strategy)) + 
+  geom_col() + 
+   geom_text(aes(label = scales::comma(mean_sales)),
+            vjust = 2,  
+            size = 5) +
+  labs(title = "Mean sales per Pricing Strategy (only companies with sales)",
+       x = "Price Strategy",
+       y = "Mean Sales") +
+  theme_bw() +
+  theme(panel.grid = element_blank(), legend.position = "none")
+
+```
