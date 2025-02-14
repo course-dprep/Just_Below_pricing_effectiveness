@@ -22,9 +22,11 @@ library(knitr)
 dropbox_url <- "https://www.dropbox.com/scl/fi/3jzhkicf953bsusjtu938/amz_uk_processed_data.csv?rlkey=ikvjt5kz4hy0tbdynrypb786n&st=6xb1y3g6&dl=1"
 Amazon_UK <- read_csv(dropbox_url)
 ```
+# Data Description before Data Preparation
+For this project, a large dataset from Kaggle (https://www.kaggle.com/) was used, consisting of `r nrow(Amazon_UK)` Amazon products from the UK.
 
 ### Remove and rename columns
-```{r warning=FALSE, include=FALSE}
+```{r warning=FALSE}
 #Drop columns
 Amazon_UK <- Amazon_UK %>% select(-imgUrl) %>% select(-productURL) %>% select(-stars) %>% select (-reviews) %>% select(-isBestSeller)
 
@@ -32,33 +34,18 @@ Amazon_UK <- Amazon_UK %>% select(-imgUrl) %>% select(-productURL) %>% select(-s
 Amazon_UK <- Amazon_UK %>% rename(Product_ID = asin, Product_Name = title, Price = price, SalesLastMonth = boughtInLastMonth, Product_Category = categoryName)
 ```
 
-## Data Description
-For this project, a large dataset from Kaggle (https://www.kaggle.com/) was used, consisting of `r nrow(Amazon_UK)` Amazon products from the UK. The data was scraped in October 2023  and included the following variables:
-
-```{r warning=FALSE, include=FALSE}
-#give overview of variables and descriptions
-table <- data.frame(`Variable` = c("Product_ID", "Product_Name", "Price", "SalesLastMonth", "Product_Category"), 
-                    `Description` = c("Product ID from Amazon", 
-                                      "Name of the product",
-                                      "Current price of the product",
-                                      "Number of products sold in the last month", "Product category"),
-                    stringsAsFactors = FALSE
-)
-
-kable(table, format = "markdown")
-```
-
 ## Data cleaning
 ```{r warning=FALSE}
 #Prices of 0 removed as this meant no pricing information was available
 Amazon_UK <- Amazon_UK %>% filter(Price >= 0.01)
 
-#outlier detection per product category
-quantile(Amazon_UK$Price, .01)
- 
-quantile(Amazon_UK$Price, .001)
-
-Amazon_UK %>% group_by(Product_Category) %>% summarize(q001=quantile(Price, .001))
+#calculate the 1% quantile for each product category
+q01 <- Amazon_UK %>% group_by(Product_Category) %>% summarize(q01=quantile(Price, .01))
+#Filter out the extremely low prices
+Amazon_UK <- Amazon_UK %>%
+  left_join(q01, by = "Product_Category") %>% 
+  filter(Price > q01) %>% 
+  select(-q01)
 ```
 
 ## Variable operationalization
@@ -83,4 +70,27 @@ Amazon_UK = Amazon_UK %>% mutate(Price_Bucket = cut(Price, c(0,1,5,10,20,50,100,
 Categories = unique(Amazon_UK$Product_Category)
 Categories = Amazon_UK %>% group_by(Product_Category) %>% summarize(Product_count = n()) %>% mutate(ranking = rank(-Product_count)) %>% mutate(top = ranking <= 10)
 Categories_filtered = Categories %>% filter(top==T) %>% pull(Product_Category)
+
+#Remove unneeded columns after operationalization
+Amazon_UK <- Amazon_UK %>% select(-BelowPrice, -HigherPrice)
+```
+
+# Data Description after Data Preparation
+After data cleaning and variable operationalization, the dataset consists of `r nrow(Amazon_UK)` Amazon products and includes the following variables:
+
+```{r echo=FALSE, warning=FALSE}
+#give overview of variables and descriptions
+table <- data.frame(`Variable` = c("Product_ID", "Product_Name", "Price", "SalesLastMonth", "Product_Category", "PriceEnding", "Price_Strategy", "Price_Bucket"), 
+                    `Description` = c("Product ID from Amazon", 
+                                      "Name of the product",
+                                      "Current price of the product",
+                                      "Number of products sold in the last month", 
+                                      "Product category",
+                                      "Price ending of the product (digits after the whole dollar", 
+                                      "Price strategy used (just-below vs. Round vs. Other",
+                                      "Price level category of the product"),
+                    stringsAsFactors = FALSE
+)
+
+kable(table, format = "markdown")
 ```
