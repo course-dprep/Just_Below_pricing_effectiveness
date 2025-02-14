@@ -1,0 +1,109 @@
+---
+title: "Data Exploration"
+author: "Anne van der Vliet"
+date: "2025-02-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r warning=FALSE, include=FALSE}
+#load needed packages
+library(tidyverse)
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(extrafont)
+library(readr)
+```
+
+```{r warning=FALSE, include=FALSE}
+#Load dataset based on "Data Download.Rmd"
+Amazon_UK <- read_csv("../../gen/data-preparation/data/AmazonData.csv")
+```
+
+
+## First look of the data
+```{r echo=FALSE, warning=FALSE}
+summary(Amazon_UK)
+head(Amazon_UK)
+tail(Amazon_UK)
+```
+
+### Price ending distribution
+```{r echo=FALSE, warning=FALSE}
+#Overall distribution price endings
+Amazon_UK %>% ggplot(aes(x = PriceEnding)) + 
+  geom_bar() +
+  labs(title = "Overall distribution price endings",
+       x = "Price endings",
+       y = "Sum") +
+   theme_bw() +
+    theme(panel.grid = element_blank())
+  
+
+#Zooming in on prices ending in .90 until .00
+Amazon_UK %>% filter(PriceEnding >= 0.90) %>% 
+  ggplot(aes(x = PriceEnding)) + 
+  geom_bar() +
+  labs(title = "Distribution price endings .90 until .00",
+       x = "Price endings",
+       y = "Sum") +
+   theme_bw() +
+    theme(panel.grid = element_blank())
+
+#Top 10 categories
+Categories = unique(Amazon_UK$Product_Category)
+Categories = Amazon_UK %>% group_by(Product_Category) %>% summarize(Product_count = n()) %>% mutate(ranking = rank(-Product_count)) %>% mutate(top = ranking <= 10)
+Categories_filtered = Categories %>% filter(top==T) %>% pull(Product_Category)
+
+#Zooming in on prices ending in .90 until .00 for top 10 categories
+Amazon_UK %>% filter(PriceEnding >= 0.90) %>%
+  filter(Product_Category %in% Categories_filtered) %>% 
+  ggplot(aes(x = PriceEnding)) + 
+  geom_bar() +
+  labs(title = "Distribution price endings .90 until .00 top 10 categories",
+       x = "Price endings",
+       y = "Sum") +
+   theme_bw() +
+    theme(panel.grid = element_blank())
+```
+
+### Price ending distribution per Product Category
+```{r echo=FALSE, warning=FALSE}
+#Distribution price endings top 10 categories
+Amazon_filtered <- Amazon_UK %>% filter(Product_Category %in% Categories_filtered)
+for (cat in unique(Amazon_filtered$Product_Category)) {
+  df_cat <- Amazon_filtered %>% filter(Product_Category == cat)
+  AmazonPlots <- ggplot(df_cat, aes(x = PriceEnding)) + 
+    geom_bar(aes()) + 
+    labs(title = paste("Overall distribution price endings top 10 categories -", cat),
+         x = "Price endings",
+         y = "Sum") +
+    theme_bw() +
+    theme(panel.grid = element_blank(),
+          legend.position = "none")
+          
+  print(AmazonPlots)
+}
+
+#Zooming in on prices ending in .90 until .00
+Amazon_filtered <- Amazon_UK %>% filter(PriceEnding >= 0.90) %>%
+  filter(Product_Category %in% Categories_filtered)
+for (cat in unique(Amazon_filtered$Product_Category)) {
+  df_cat <- Amazon_filtered %>% filter(Product_Category == cat)
+  AmazonPlots <- ggplot(df_cat, aes(x = PriceEnding)) + 
+    geom_bar(aes()) + 
+    labs(title = paste("Distribution price endings .90 until .00 top 10 -", cat),
+         x = "Price endings",
+         y = "Sum") +
+    theme_bw() +
+    theme(panel.grid = element_blank(),
+          legend.position = "none")
+          
+  print(AmazonPlots)
+}
+```
+
