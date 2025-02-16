@@ -1,3 +1,9 @@
-# Use this file to keep certain files from being versioned (covered in the GitHub part of the course).
-
+*.log
+*.aux
+*.Rhistory
+.RData
+**gen/
+**.Rout
+*.csv
 .DS_Store
+*.pdf
