@@ -46,7 +46,7 @@ First, the data will be prepared for the analysis by removing missing and inaccu
 ```
 
 ## Dependencies 
-Make sure you have downloaded R [Click here for information on how to Set up R and RStudio] (https://tilburgsciencehub.com/topics/computer-setup/software-installation/rstudio/r/)
+Make sure you have downloaded R (https://tilburgsciencehub.com/topics/computer-setup/software-installation/rstudio/r/)
 In addition, make sure to following RPackages are installed:
 ```
 install.packages("tidyverse")
