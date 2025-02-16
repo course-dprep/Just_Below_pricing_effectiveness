@@ -1,2 +1,10 @@
-gen/data-preparation/data/AmazonData.csv
+*RData
+*pdf
+**/gen
+**/zip
+*csv
+*xlsx
+*log
+*.log
+.RProfile
 .Rhistory
