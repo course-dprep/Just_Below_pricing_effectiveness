@@ -1,2 +1,5 @@
 **gen/
 *csv
+*.Rhistory
+*.log
+*.aux
