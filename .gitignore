@@ -1,9 +1,7 @@
-*.log
-*.aux
+*log
 *.Rhistory
-.RData
+*.RData
 **/gen
 **.Rout
 *csv
 .DS_Store
-*.pdf
