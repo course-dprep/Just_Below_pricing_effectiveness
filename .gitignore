@@ -1,4 +1,4 @@
-**gen/
+**/gen
 *.csv
 *.Rhistory
 *.log
