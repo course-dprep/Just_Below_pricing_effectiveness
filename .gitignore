@@ -2,8 +2,8 @@
 *.aux
 *.Rhistory
 .RData
-**gen/
+**/gen
 **.Rout
-*.csv
+*csv
 .DS_Store
 *.pdf
