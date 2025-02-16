@@ -1,7 +1,2 @@
-*log
-*.Rhistory
-*.RData
-**/gen
-**.Rout
-*csv
-.DS_Store
+gen/data-preparation/data/AmazonData.csv
+.Rhistory
