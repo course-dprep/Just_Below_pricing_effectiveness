@@ -1,5 +1,5 @@
 # The effectiveness of Just-Below Pricing
-This project estimates to what extent the use of just-below pricing (as opposed to round pricing) affects consumers' purchase behavior. In addition, it looks at how this relationship is affected by the price level of the product. In total, more than 2 million products from the Amazon UK website were included in the analysis, collected in 2023. The insights help price-setters determining whether to use just-below or round prices in order to maximize demand. 
+This project estimates, by delivering a PDF file, to what extent the use of just-below pricing (as opposed to round pricing) affects consumers' purchase behavior. In addition, it looks at how this relationship is affected by the price level of the product. In total, more than 2 million products from the Amazon UK website were included in the analysis, collected in 2023. The insights help price-setters determining whether to use just-below or round prices in order to maximize demand. 
 
 ## Research Motivation
 $2.99 for a chocolate bar, $19.99 for a sweater, $1199.99 for a smartphone and even stores devoted to selling products priced at $0.99 - prices set just below a round number are widely known around the globe (Tripathi & Pandey, 2018). A recent pilot study, including more than 12.000 prices from web pages in the United States and Germany, concluded that these prices make up almost 65% of prices on the internet (Troll et al., 2024), highlighting the popularity of this strategy. One explanation for the popularity is that just-below prices lead to an underestimation effect, where prices ending in $0.99 (e.g., $14.99) are perceived as substantially lower than their round counterparts, positively affecting demand (Chang & Chen, 2014). As a result, one might argue that it is beneficial for price-setters to price their products and services just below the round number. 
@@ -13,18 +13,19 @@ As indicated before, the conclusions regarding the effectiveness of just-below p
 **To what extent does just below pricing (as opposed to round pricing) affect consumers' purchase behavior and to what extent does this effect depend on the price level of the product?**
 
 ## Data
-For this project, a large dataset from Kaggle (https://www.kaggle.com/) was used, consisting of more than 2 million Amazon products from the UK. The data was scraped in October 2023  and included the following variables:
+For this project, a large dataset from Kaggle (https://www.kaggle.com/datasets/asaniczka/amazon-uk-products-dataset-2023) was used, consisting of more than 2 million Amazon products from the UK. The data was scraped in October 2023 and, after data cleaning and variable operationalization, included the following variables:
 |Variable                        |Description                                                                                     |
 |--------------------------------|------------------------------------------------------------------------------------------------|
-|ID                              |Product ID from Amazon                                                                          |
-|Title                           |Title of the product                                                                            |
-|I_URL                           |URL of the product image                                                                        |
-|P_URL                           |URL of the product                                                                              |
-|Rating                          |Star rating of the product (1 - 5)                                                              |
-|Reviews                         |Number of Reviews                                                                               | 
+|Product_ID                      |Product ID from Amazon                                                                          |
+|Product_Name                    |Name of the product                                                                             |
+|Price                           |Current price of the product                                                                    |
+|SalesLastMonth                  |Number of products sold in the last month                                                       |
+|Product_Category                |Product category                                                                                |
+|PriceEnding                     |Price ending of the product (digits after the whole number)                                     | 
+|Price_Strategy                  |Price strategy used (just-below vs. Round vs. Other)                                            |
+|Price_Bucket                    |Price level of the product                                                                      |
 
 ## Method
-
 First, the data will be prepared for the analysis by removing missing and inaccurately recorded data. In addition, the variables needed for the analysis will be operationalized. Next, the data will be explored using ggplot and going over the summary statistics. Finally, the research question will be answered via the use of a multiple linear regression. A multiple linear regression is a suitable method as (1) it can deal with the measurement levels of the variables, (2) analyzes all the variables at ones, and (3) allows us to include control variables if deemed needed. 
 
 ## Preview of Findings 
@@ -33,12 +34,28 @@ First, the data will be prepared for the analysis by removing missing and inaccu
 - Explain the relevance of these findings/product. 
 
 ## Repository Overview 
-
-**Include a tree diagram that illustrates the repository structure*
+``` 
+- data
+- reporting
+- scr
+ - analysis
+ - data-preparation
+- .gitignore
+- README.md
+- makefile
+```
 
 ## Dependencies 
-
-*Explain any tools or packages that need to be installed to run this workflow.*
+Make sure you have downloaded R [Click here for information on how to Set up R and RStudio] (https://tilburgsciencehub.com/topics/computer-setup/software-installation/rstudio/r/)
+In addition, make sure to following RPackages are installed:
+```
+install.packages("tidyverse")
+install.packages("knitr")
+install packages("ggplot2")
+install.packages("dplyr")
+install.packages("extrafont")
+install.packages("readr")
+```
 
 ## Running Instructions 
 
