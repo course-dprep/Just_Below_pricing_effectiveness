@@ -68,7 +68,7 @@ git clone https://github.com/course-dprep/team-project-spring-2025-phd-team-1.gi
 ```
 - Set your working directory to the just copied repository
 - Run Data Download.Rmd
-- Run Data exploration (this step is optional)
+- Run Data exploration.Rmd (this step is optional)
 
 ## About 
 Author: Anne van der Vliet, email: a.vdrvliet@tilburguniversity.edu
