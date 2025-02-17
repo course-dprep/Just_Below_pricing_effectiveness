@@ -77,9 +77,15 @@ This project is set up as part of the Master's course [Data Preparation & Workfl
 
 ## References
 Choi, J., Li, Y. J., Rangan, P., Chatterjee, P., & Singh, S. N. (2014). The odd-ending price justification effect: The influence of price-endings on hedonic and utilitarian consumption. Journal of the Academy of Marketing Science, 42(5), 545–557. https://doi.org/10.1007/s11747-014-0369-6  
+
 Georgoff, D. M. (1972). Odd-even retail price endings: Their effects on value determination, product perception, and buying propensities.
+
 Kim. J., Malkoc, S.A., Goodman, J.K., (2022). The Threshold-Crossing Effect: Just-Below Pricing Discourages Consumers to Upgrade, Journal of Consumer Research, 48(6), 1096–1112. https://doi.org/10.1093/jcr/ucab049 
+
 Chang, H.-H., & Chen, F.-P. (2014). When is a 9-ending price perceived lower than a 0-ending price? The moderating role of price consciousness. International Journal of Business and Information, 9(1), 89–116. 
+
 Schindler, R. M., & Kibarian, T. M. (2001). Image communicated by the use of 99 endings in advertised prices. Journal of Advertising, 30(4), 95–99. https://doi.org/10.1080/00913367.2001.10673654 
+
 Tripathi, A., & Pandey, N. (2018) Are Nine-Ending Prices Equally Influential in Eastern Culture for Pricing Green Products?, Journal of International Consumer Marketing, 30(3), 192-205. https://doi.org/10.1080/08961530.2017.1384711 
+
 Troll, E. S., Frankenbach, J., Friese, M., & Loschelder, D. D. (2024). A meta‐analysis on the effects of just‐below versus round prices. Journal of Consumer Psychology, 34(2), 299–325. https://doi.org/10.1002/jcpy.1353 
