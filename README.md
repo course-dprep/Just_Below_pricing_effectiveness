@@ -46,7 +46,7 @@ First, the data will be prepared for the analysis by removing missing and inaccu
 ```
 
 ## Dependencies 
-Make sure you have downloaded R via the instructions included [Here]([https://example.com](https://tilburgsciencehub.com/topics/computer-setup/software-installation/rstudio/r/))
+Make sure you have downloaded R via the instructions included [Here]([https://example.com](https://tilburgsciencehub.com/topics/computer-setup/software-installation/rstudio/r/) 
 In addition, make sure the following RPackages are installed:
 ```
 install.packages("tidyverse")
@@ -64,7 +64,7 @@ For this workflow to run, the following steps should be taken:
 - Open your command-line (e.g., Git GUI)
 - Create a copy of the repository to your local machine by copying the following sentence in your command-line:
 ```
-git clone 
+git clone https://github.com/course-dprep/team-project-spring-2025-phd-team-1.git
 ```
 - Set your working directory to the just copied repository
 - Run Data Download.Rmd
