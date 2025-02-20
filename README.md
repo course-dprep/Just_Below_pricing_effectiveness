@@ -18,6 +18,7 @@ For this project, a large dataset from Kaggle (https://www.kaggle.com/datasets/a
 |--------------------------------|------------------------------------------------------------------------------------------------|
 |Product_ID                      |Product ID from Amazon                                                                          |
 |Product_Name                    |Name of the product                                                                             |
+|StarRating                      |Average star rating of the product                                                              |
 |Price                           |Current price of the product                                                                    |
 |SalesLastMonth                  |Number of products sold in the last month                                                       |
 |Product_Category                |Product category                                                                                |
