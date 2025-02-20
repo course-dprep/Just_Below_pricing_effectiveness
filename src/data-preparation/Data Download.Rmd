@@ -32,7 +32,7 @@ Various columns were deleted as they will not be used in the analysis. In additi
 Amazon_UK <- Amazon_UK %>% select(-imgUrl) %>% select(-productURL) %>% select (-reviews) %>% select(-isBestSeller)
 
 #Rename columns
-Amazon_UK <- Amazon_UK %>% rename(Product_ID = asin, Product_Name = title, Price = price, SalesLastMonth = boughtInLastMonth, Product_Category = categoryName)
+Amazon_UK <- Amazon_UK %>% rename(Product_ID = asin, Product_Name = title, Price = price, SalesLastMonth = boughtInLastMonth, Product_Category = categoryName, StarRating = stars)
 ```
 
 ## Data cleaning
@@ -43,6 +43,7 @@ Amazon_UK <- Amazon_UK %>% filter(Price >= 0.01)
 
 #calculate the 1% quantile for each product category
 q01 <- Amazon_UK %>% group_by(Product_Category) %>% summarize(q01=quantile(Price, .01))
+
 #Filter out the extremely low prices
 Amazon_UK <- Amazon_UK %>%
   left_join(q01, by = "Product_Category") %>% 
@@ -78,14 +79,21 @@ Categories_filtered = Categories %>% filter(top==T) %>% pull(Product_Category)
 Amazon_UK <- Amazon_UK %>% select(-BelowPrice, -HigherPrice)
 ```
 
+##Create dataset with only Top 10 product categories
+```{r}
+Amazon_UK_Top10 <- Amazon_UK %>% filter(Product_Category %in% Categories_filtered)
+```
+
+
 ## Data Description after Data Preparation
-After data cleaning and variable operationalization, the dataset consists of `r nrow(Amazon_UK)` Amazon products and includes the following variables:
+After data cleaning and variable operationalization, the datasets consist of `r nrow(Amazon_UK)` Amazon products and includes the following variables:
 
 ```{r echo=FALSE, warning=FALSE}
 #give overview of variables and descriptions
-table <- data.frame(`Variable` = c("Product_ID", "Product_Name", "Price", "SalesLastMonth", "Product_Category", "PriceEnding", "Price_Strategy", "Price_Bucket"), 
+table <- data.frame(`Variable` = c("Product_ID", "Product_Name", "StarRating", "Price", "SalesLastMonth", "Product_Category", "PriceEnding", "Price_Strategy", "Price_Bucket"), 
                     `Description` = c("Product ID from Amazon", 
                                       "Name of the product",
+                                      "Average star rating of the product",
                                       "Current price of the product",
                                       "Number of products sold in the last month", 
                                       "Product category",
@@ -101,16 +109,8 @@ kable(table, format = "markdown")
 ```{r}
 #check whether or not the data types are correct 
 glimpse(Amazon_UK)
-is.numeric(Amazon_UK$Price)
-is.numeric(Amazon_UK$PriceEnding)
-is.numeric(Amazon_UK$SalesLastMonth)
-
-#change data type price bucket column
-
-
+glimpse(Amazon_UK_Top10)
 ```
-
-
 
 ```{r warning=FALSE, include=FALSE}
 # Create directories to save data
@@ -122,5 +122,6 @@ dir.create('../../gen/data-preparation/data')
 ```{r warning=FALSE, include=FALSE}
 #Save dataset as CSV
 write.csv(Amazon_UK, file = "../../gen/data-preparation/data/AmazonData.csv")
+write.csv(Amazon_UK_Top10, file = "../../gen/data-preparation/data/AmazonDataTop10.csv")
 ```
 
