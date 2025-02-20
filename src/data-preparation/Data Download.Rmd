@@ -29,7 +29,7 @@ For this project, a large dataset from Kaggle (https://www.kaggle.com/) was used
 Various columns were deleted as they will not be used in the analysis. In addition, the needed columns were renamed.
 ```{r echo=FALSE, warning=FALSE}
 #Drop columns
-Amazon_UK <- Amazon_UK %>% select(-imgUrl) %>% select(-productURL) %>% select(-stars) %>% select (-reviews) %>% select(-isBestSeller)
+Amazon_UK <- Amazon_UK %>% select(-imgUrl) %>% select(-productURL) %>% select (-reviews) %>% select(-isBestSeller)
 
 #Rename columns
 Amazon_UK <- Amazon_UK %>% rename(Product_ID = asin, Product_Name = title, Price = price, SalesLastMonth = boughtInLastMonth, Product_Category = categoryName)
@@ -97,6 +97,19 @@ table <- data.frame(`Variable` = c("Product_ID", "Product_Name", "Price", "Sales
 
 kable(table, format = "markdown")
 ```
+
+```{r}
+#check whether or not the data types are correct 
+glimpse(Amazon_UK)
+is.numeric(Amazon_UK$Price)
+is.numeric(Amazon_UK$PriceEnding)
+is.numeric(Amazon_UK$SalesLastMonth)
+
+#change data type price bucket column
+
+
+```
+
 
 
 ```{r warning=FALSE, include=FALSE}
