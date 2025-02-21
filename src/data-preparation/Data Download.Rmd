@@ -49,6 +49,9 @@ Amazon_UK <- Amazon_UK %>%
   left_join(q01, by = "Product_Category") %>% 
   filter(Price > q01) %>% 
   select(-q01)
+
+#Check for duplicates
+sum(duplicated(Amazon_UK))
 ```
 
 ## Variable operationalization

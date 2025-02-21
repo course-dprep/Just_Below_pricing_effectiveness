@@ -34,6 +34,11 @@ tail(Amazon_UK)
 
 ### Price ending distribution
 ```{r echo=FALSE, warning=FALSE}
+#Top 10 categories
+Categories = unique(Amazon_UK$Product_Category)
+Categories = Amazon_UK %>% group_by(Product_Category) %>% summarize(Product_count = n()) %>% mutate(ranking = rank(-Product_count)) %>% mutate(top = ranking <= 10)
+Categories_filtered = Categories %>% filter(top==T) %>% pull(Product_Category)
+
 #Overall distribution price endings
 Amazon_UK %>% ggplot(aes(x = PriceEnding)) + 
   geom_bar() +
@@ -43,6 +48,15 @@ Amazon_UK %>% ggplot(aes(x = PriceEnding)) +
    theme_bw() +
     theme(panel.grid = element_blank())
   
+#Overall distribution price endings for top 10 categories
+Amazon_UK %>% filter(Product_Category %in% Categories_filtered) %>%
+  ggplot(aes(x = PriceEnding)) + 
+  geom_bar() +
+  labs(title = "Overall distribution price endings for top 10",
+       x = "Price endings",
+       y = "Sum") +
+   theme_bw() +
+    theme(panel.grid = element_blank())
 
 #Zooming in on prices ending in .90 until .00
 Amazon_UK %>% filter(PriceEnding >= 0.90) %>% 
@@ -53,11 +67,6 @@ Amazon_UK %>% filter(PriceEnding >= 0.90) %>%
        y = "Sum") +
    theme_bw() +
     theme(panel.grid = element_blank())
-
-#Top 10 categories
-Categories = unique(Amazon_UK$Product_Category)
-Categories = Amazon_UK %>% group_by(Product_Category) %>% summarize(Product_count = n()) %>% mutate(ranking = rank(-Product_count)) %>% mutate(top = ranking <= 10)
-Categories_filtered = Categories %>% filter(top==T) %>% pull(Product_Category)
 
 #Zooming in on prices ending in .90 until .00 for top 10 categories
 Amazon_UK %>% filter(PriceEnding >= 0.90) %>%
