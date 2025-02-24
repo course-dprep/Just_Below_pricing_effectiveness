@@ -1,0 +1,50 @@
+---
+title: "Data Analysis"
+author: "Anne van der Vliet"
+date: "2025-02-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r warning=FALSE, include=FALSE}
+# Load needed packages
+library(tidyverse)
+library(knitr)
+library(dplyr)
+library(readr)
+```
+
+```{r}
+# Load dataset based on "Data Download.Rmd"
+Amazon_UK_Top10 <- read_csv("../../gen/data-preparation/data/AmazonDataTop10.csv")
+```
+
+## Descriptive statistics
+```{r}
+
+```
+
+## T-test main effect IV-DV
+```{r}
+
+```
+
+## Regression MOD-DV
+```{r}
+
+```
+
+
+## Explore possible control variables 
+```{r}
+
+```
+
+## Main analysis
+```{r}
+
+```
+
