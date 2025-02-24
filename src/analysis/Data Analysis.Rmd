@@ -24,7 +24,15 @@ Amazon_UK_Top10 <- read_csv("../../gen/data-preparation/data/AmazonDataTop10.csv
 
 ## Descriptive statistics
 ```{r}
-
+Amazon_UK_Top10 %>% 
+  group_by(Product_Category) %>% 
+  summarise(AmountofProducts = n(),
+            PricedasJustBelow = sum(Price_Strategy == "just-below", na.rm = TRUE),
+            PercentageJustBelow = round((PricedasJustBelow / AmountofProducts) * 100, 0),
+            AveragePrice = round(mean(Price, na.rm = TRUE), 2), 
+            MaxPrice = max(Price, na.rm = TRUE),
+            MinPrice = min(Price, na.rm = TRUE),
+            AverageReviewRating = round(mean(StarRating, na.rm = TRUE), 1))
 ```
 
 ## T-test main effect IV-DV
