@@ -2,7 +2,7 @@
 title: "Data Exploration"
 author: "Anne van der Vliet"
 date: "2025-02-14"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -17,13 +17,14 @@ library(ggplot2)
 library(dplyr)
 library(extrafont)
 library(readr)
+library(rmarkdown)
+library(tinytex)
 ```
 
 ```{r warning=FALSE, include=FALSE}
 #Load dataset based on "Data Download.Rmd"
-Amazon_UK <- read_csv("../../data/AmazonData.csv")
+Amazon_UK <- read_csv("../../gen/data-preparation/output/AmazonData.csv")
 ```
-
 
 ## First look of the data
 ```{r echo=FALSE, warning=FALSE}

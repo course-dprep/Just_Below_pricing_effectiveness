@@ -1,8 +1,7 @@
 ---
-title: "Cleaning"
+title: "Data Cleaning"
 author: "Anne van der Vliet"
 date: "2025-02-27"
-output: html_document
 ---
 
 ```{r warning=FALSE, include=FALSE}
@@ -11,7 +10,7 @@ library(tidyverse)
 library(knitr)
 
 #import dataset
-Amazon_UK <- read_csv("../../gen/data-preparation/AmazonData.csv")
+Amazon_UK <- read_csv("../../gen/data-preparation/temp/AmazonData.csv")
 ```
 
 ## Remove and rename columns
@@ -106,6 +105,6 @@ glimpse(Amazon_UK_Top10)
 
 ```{r warning=FALSE, include=FALSE}
 #Save dataset as CSV
-write.csv(Amazon_UK, file = "../../data/AmazonData.csv")
-write.csv(Amazon_UK_Top10, file = "../../data/AmazonDataTop10.csv")
+write.csv(Amazon_UK, file = "../../gen/data-preparation/output/AmazonData.csv")
+write.csv(Amazon_UK_Top10, file = "../../gen/data-preparation/output/AmazonDataTop10.csv")
 ```
