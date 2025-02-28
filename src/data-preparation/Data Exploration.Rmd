@@ -21,7 +21,7 @@ library(readr)
 
 ```{r warning=FALSE, include=FALSE}
 #Load dataset based on "Data Download.Rmd"
-Amazon_UK <- read_csv("../../gen/data-preparation/AmazonData.csv")
+Amazon_UK <- read_csv("../../data/AmazonData.csv")
 ```
 
 

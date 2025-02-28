@@ -106,6 +106,6 @@ glimpse(Amazon_UK_Top10)
 
 ```{r warning=FALSE, include=FALSE}
 #Save dataset as CSV
-write.csv(Amazon_UK, file = "../../gen/data-preparation/AmazonData.csv")
-write.csv(Amazon_UK_Top10, file = "../../gen/data-preparation/AmazonDataTop10.csv")
+write.csv(Amazon_UK, file = "../../data/AmazonData.csv")
+write.csv(Amazon_UK_Top10, file = "../../data/AmazonDataTop10.csv")
 ```
