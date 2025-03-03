@@ -1,0 +1,68 @@
+---
+title: "Preliminary_data_analysis"
+author: "Anne van der Vliet"
+date: "2025-03-03"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r warning=FALSE, include=FALSE}
+# Load needed packages
+library(tidyverse)
+library(knitr)
+library(dplyr)
+library(readr)
+library(rmarkdown)
+library(tinytex)
+```
+
+# Dataset
+As the distribution regarding the use of just-below vs. round is fairly the same for the entire dataset and the top 10 product category dataset, the analysis will be performed on the top 10 product category dataset. 
+```{r warning=FALSE, include=FALSE}
+# Load dataset based on "Data Download.Rmd"
+Amazon_UK_Top10 <- read_csv("../../gen/data-preparation/output/AmazonDataTop10.csv")
+```
+
+## Descriptive statistics
+```{r echo=FALSE, warning=FALSE}
+# Descriptive statistics table
+Amazon_UK_Top10 %>% 
+  group_by(Product_Category) %>% 
+  summarise(AmountofProducts = n(),
+            PricedasJustBelow = sum(Price_Strategy == "just-below", na.rm = TRUE),
+            PercentageJustBelow = paste0(round((PricedasJustBelow / AmountofProducts) * 100, 0), "%"),
+            AveragePrice = paste0("$", (round(mean(Price, na.rm = TRUE), 2))), 
+            MaxPrice = paste0("$", (max(Price, na.rm = TRUE))),
+            MinPrice = paste0("$", (min(Price, na.rm = TRUE))),
+            AverageReviewRating = round(mean(StarRating, na.rm = TRUE), 1))
+```
+
+## ANOVA main effect IV-DV
+```{r echo=FALSE, warning=FALSE}
+# ANOVA
+anova_IVDV <- aov(SalesLastMonth ~ Price_Strategy, data = Amazon_UK_Top10)
+summary(anova_IVDV)
+
+# Post-hoc Test
+tukey_resultIVDV <- TukeyHSD(anova_IVDV)
+tukey_resultIVDV
+```
+
+## Analysis direct effect MOD-DV
+```{r echo=FALSE, warning=FALSE}
+# Run regression price level on sales last month
+PriceLevelmodel <- lm(SalesLastMonth ~ Price, data = Amazon_UK_Top10)
+# View results
+summary(PriceLevelmodel)
+
+# Run ANOVA product category on sales last month
+anova_resultMODDV <- aov(SalesLastMonth ~ Product_Category, data = Amazon_UK_Top10)
+summary(anova_resultMODDV)
+
+# Post-hoc Test
+tukey_resultMODDV <- TukeyHSD(anova_resultMODDV)
+tukey_resultMODDV
+```
