@@ -16,3 +16,8 @@ $(GENDPREPOUTPUT)/AmazonData.csv $(GENDPREPOUTPUT)/AmazonDataTop10.csv: $(GENDPR
 $(GENDPREPTEMP)/AmazonData.csv: Data_Download.Rmd
 	Rscript -e "rmarkdown::render('Data_Download.Rmd')"
 
+## Deletion of created csv and pdf files
+wipe:
+	@if exist "$(GENDPREPTEMP)\*.csv" cmd /c del /Q "$(GENDPREPTEMP)\*.csv"
+	@if exist "$(GENDPREPOUTPUT)\*.csv" cmd /c del /Q "$(GENDPREPOUTPUT)\*.csv"
+	@if exist "$(GENDPREPOUTPUT)\*.pdf" cmd /c del /Q "$(GENDPREPOUTPUT)\*.pdf"
