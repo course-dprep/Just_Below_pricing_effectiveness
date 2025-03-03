@@ -10,7 +10,7 @@ However, results regarding the effectiveness of just-below pricing are mixed. Wh
 As indicated before, the conclusions regarding the effectiveness of just-below pricing are mixed. By looking into the moderating effect of price levels, the conflicting findings might be reconciled and additional knowledge regarding the use of just-below pricing might be added to the literature. In addition, these insights are of vital interest to price-setters who are contemplating the use of just-below pricing to drive demand. Specifically, the article provides answers to when and why the use of just-below pricing might (not) be preferred in a given context, providing price-setters with the needed information on how to price their goods.
 
 ## Research Question
-**To what extent does just below pricing (as opposed to round pricing) affect consumers' purchase behavior and to what extent does this effect depend on the price level of the product?**
+**To what extent does just below pricing (as opposed to round pricing) affect consumers' purchase behavior and to what extent does this effect depend on the price level and product category of the product?**
 
 ## Data
 For this project, a large dataset from Kaggle (https://www.kaggle.com/datasets/asaniczka/amazon-uk-products-dataset-2023) was used, consisting of more than 2 million Amazon products from the UK. The data was scraped in October 2023 and, after data cleaning and variable operationalization, included the following variables:
