@@ -26,7 +26,14 @@ As the distribution regarding the use of just-below vs. round is fairly the same
 Amazon_UK_Top10 <- read_csv("../../gen/data-preparation/output/AmazonDataTop10.csv")
 ```
 
+```{r warning=FALSE, include=FALSE}
+# Create directories to save output
+dir.create('../../gen/analysis')
+dir.create('../../gen/analysis/output')
+```
+
 ## Descriptive statistics
+First we present some descriptive statistics below to get a first feeling of the data. As can be seen from the table, the proportion of products priced as just-below differs per product category. 
 ```{r echo=FALSE, warning=FALSE}
 # Descriptive statistics table
 Amazon_UK_Top10 %>% 
@@ -41,6 +48,7 @@ Amazon_UK_Top10 %>%
 ```
 
 ## ANOVA main effect IV-DV
+Before the main analysis is performed, we have looked at the direct effect of the IV (price strategy) on the DV (sales) via an ANOVA. The output of the ANOVA is presented below:
 ```{r echo=FALSE, warning=FALSE}
 # ANOVA
 anova_IVDV <- aov(SalesLastMonth ~ Price_Strategy, data = Amazon_UK_Top10)
@@ -49,20 +57,23 @@ summary(anova_IVDV)
 # Post-hoc Test
 tukey_resultIVDV <- TukeyHSD(anova_IVDV)
 tukey_resultIVDV
-```
 
-## Analysis direct effect MOD-DV
+# Means table
+Amazon_UK_Top10 %>%
+  group_by(Price_Strategy) %>%
+  summarise(Mean_Sales = mean(SalesLastMonth, na.rm = TRUE))
+```
+Based on the ANOVA, one can see a significant effect of pricing strategy on sales. Specifically, when looking at the post-hoc test, there is a significant difference between all groups (round, just-below and other). The means table shows that a round price results in the highest sales, after which a just-below price is best. 
+
+This might; however, differ depending on the price of the product. The main analysis will inspect this further. 
+
+
+## Linear regression price on sales
+In addition, before the main analysis, we have looked at the main effect of the MOD (price) on the DV (sales of the product). The output is presented below:
 ```{r echo=FALSE, warning=FALSE}
 # Run regression price level on sales last month
 PriceLevelmodel <- lm(SalesLastMonth ~ Price, data = Amazon_UK_Top10)
 # View results
 summary(PriceLevelmodel)
-
-# Run ANOVA product category on sales last month
-anova_resultMODDV <- aov(SalesLastMonth ~ Product_Category, data = Amazon_UK_Top10)
-summary(anova_resultMODDV)
-
-# Post-hoc Test
-tukey_resultMODDV <- TukeyHSD(anova_resultMODDV)
-tukey_resultMODDV
 ```
+Based on the linear regression, there is a negative relationship visible between price (MOD) and sales (DV). In the main analysis, the interaction between price and pricing strategy will be considered. In addition, this will individually analyzed for every product category.
