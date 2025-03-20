@@ -1,31 +1,21 @@
----
-title: "Data Cleaning"
-author: "Anne van der Vliet"
-date: "2025-02-27"
----
-
-```{r warning=FALSE, include=FALSE}
 #load needed packages
 library(tidyverse)
 library(knitr)
+library(ggpubr)
 
 #import dataset
 Amazon_UK <- read_csv("../../gen/data-preparation/temp/AmazonData.csv")
-```
 
 ## Remove and rename columns
-Various columns were deleted as they will not be used in the analysis. In addition, the needed columns were renamed.
-```{r echo=FALSE, warning=FALSE}
+### Various columns were deleted as they will not be used in the analysis. In addition, the needed columns were renamed.
 #Drop columns
 Amazon_UK <- Amazon_UK %>% select(-imgUrl) %>% select(-productURL) %>% select (-reviews) %>% select(-isBestSeller)
 
 #Rename columns
 Amazon_UK <- Amazon_UK %>% rename(Product_ID = asin, Product_Name = title, Price = price, SalesLastMonth = boughtInLastMonth, Product_Category = categoryName, StarRating = stars)
-```
 
 ## Data cleaning
-First, prices of 0 were removed as this indicates that the price information was missing. Next, the 1% quantile for each product category, including the extremely low prices, was calculated and these prices were removed for each category.
-```{r echo=FALSE, warning=FALSE}
+### First, prices of 0 were removed as this indicates that the price information was missing. Next, the 1% quantile for each product category, including the extremely low prices, was calculated and these prices were removed for each category.
 #Prices of 0 removed as this meant no pricing information was available
 Amazon_UK <- Amazon_UK %>% filter(Price >= 0.01)
 
@@ -40,11 +30,9 @@ Amazon_UK <- Amazon_UK %>%
 
 #Check for duplicates
 sum(duplicated(Amazon_UK))
-```
 
 ## Variable operationalization
-A price ending variable is created, indicating the price ending of the product (the digits after the whole dollar). In addition, the price strategy variable is created, indicating whether companies used "Just-below pricing", "Round pricing", or another pricing strategy. Finally, price buckets were created, indicating the price level category of the products. 
-```{r warning=FALSE, include=FALSE}
+### A price ending variable is created, indicating the price ending of the product (the digits after the whole dollar). In addition, the price strategy variable is created, indicating whether companies used "Just-below pricing", "Round pricing", or another pricing strategy. Finally, price buckets were created, indicating the price level category of the products. 
 #Price ending
 Amazon_UK <- Amazon_UK %>%  mutate(HigherPrice = ceiling(Price))
 Amazon_UK <- Amazon_UK %>%  mutate(BelowPrice = HigherPrice-Price)
@@ -53,10 +41,10 @@ Amazon_UK$PriceEnding <- as.numeric(Amazon_UK$PriceEnding)
 
 #Just-below vs. Round pricing (+ other)
 Amazon_UK <- Amazon_UK %>%  mutate(Price_Strategy = case_when(
-    PriceEnding > 0.9999 ~ "round",
-    PriceEnding > 0.9899 & PriceEnding < 1.000 ~ "just-below",
-    TRUE ~ "other"
-  ))
+  PriceEnding > 0.9999 ~ "round",
+  PriceEnding > 0.9899 & PriceEnding < 1.000 ~ "just-below",
+  TRUE ~ "other"
+))
 
 #Price buckets
 Amazon_UK = Amazon_UK %>% mutate(Price_Bucket = cut(Price, c(0,1,5,10,20,50,100, 500, 1000,10000000)))
@@ -68,20 +56,15 @@ Categories_filtered = Categories %>% filter(top==T) %>% pull(Product_Category)
 
 #Remove unneeded columns after operationalization
 Amazon_UK <- Amazon_UK %>% select(-BelowPrice, -HigherPrice)
-```
 
 ##Create dataset with only Top 10 product categories
-```{r}
 Amazon_UK_Top10 <- Amazon_UK %>% filter(Product_Category %in% Categories_filtered)
-```
 
 
 ## Data Description after Data Preparation
-After data cleaning and variable operationalization, the datasets consist of `r nrow(Amazon_UK)` Amazon products and includes the following variables:
-
-```{r echo=FALSE, warning=FALSE}
-#give overview of variables and descriptions
-table <- data.frame(`Variable` = c("Product_ID", "Product_Name", "StarRating", "Price", "SalesLastMonth", "Product_Category", "PriceEnding", "Price_Strategy", "Price_Bucket"), 
+### After data cleaning and variable operationalization, the datasets consist of `r nrow(Amazon_UK)` Amazon products and includes the following variables:
+### give overview of variables and descriptions
+table_variables <- data.frame(`Variable` = c("Product_ID", "Product_Name", "StarRating", "Price", "SalesLastMonth", "Product_Category", "PriceEnding", "Price_Strategy", "Price_Bucket"), 
                     `Description` = c("Product ID from Amazon", 
                                       "Name of the product",
                                       "Average star rating of the product",
@@ -94,17 +77,15 @@ table <- data.frame(`Variable` = c("Product_ID", "Product_Name", "StarRating", "
                     stringsAsFactors = FALSE
 )
 
-kable(table, format = "markdown")
-```
+kable(table_variables, format = "markdown")
+# Save the table as a PNG
+table_plot <- ggtexttable(table_variables, rows = NULL, theme = ttheme("mBlue"))
+ggsave("../../gen/data-preparation/output/variable_overview_table.png", table_plot, width = 12, height = 6, dpi = 300)
 
-```{r}
 #check whether or not the data types are correct 
 glimpse(Amazon_UK)
 glimpse(Amazon_UK_Top10)
-```
 
-```{r warning=FALSE, include=FALSE}
 #Save dataset as CSV
 write.csv(Amazon_UK, file = "../../gen/data-preparation/output/AmazonData.csv")
 write.csv(Amazon_UK_Top10, file = "../../gen/data-preparation/output/AmazonDataTop10.csv")
-```
