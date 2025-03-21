@@ -9,6 +9,12 @@ output: pdf_document
 knitr::opts_chunk$set(warning = FALSE, include = FALSE)
 ```
 
+```{r}
+# Create directories to save output
+dir.create('../../gen/paper')
+dir.create('../../gen/paper/output')
+```
+
 **This project estimates to what extent the use of just-below pricing (as opposed to round pricing) affects consumers' purchase behavior. In addition, it looks at how this relationship is affected by the price level of the product. In total, more than 2 million products from the Amazon UK website were included in this project, collected in 2023. The insights help price-setters determining whether to use just-below or round prices in order to maximize demand.**
 
 # Research motivation

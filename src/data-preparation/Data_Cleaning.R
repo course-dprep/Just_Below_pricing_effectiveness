@@ -80,7 +80,7 @@ table_variables <- data.frame(`Variable` = c("Product_ID", "Product_Name", "Star
 kable(table_variables, format = "markdown")
 # Save the table as a PNG
 table_plot <- ggtexttable(table_variables, rows = NULL, theme = ttheme("mBlue"))
-ggsave("../../gen/data-preparation/output/variable_overview_table.png", table_plot, width = 12, height = 6, dpi = 300)
+ggsave("../../gen/data-preparation/output/variable_overview_table.png", table_plot, width = 8, height = 4, dpi = 300)
 
 #check whether or not the data types are correct 
 glimpse(Amazon_UK)
