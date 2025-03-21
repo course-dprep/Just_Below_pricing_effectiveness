@@ -30,16 +30,20 @@ For this project, a large dataset from Kaggle (https://www.kaggle.com/datasets/a
 First, the data will be prepared for the analysis by removing missing and inaccurately recorded data. In addition, the variables needed for the analysis will be operationalized. Next, the data will be explored using ggplot and going over the summary statistics. Additionally, preliminary data analysis will be executed and the research question will be answered via the use of a multiple linear regression. A multiple linear regression is a suitable method as (1) it can deal with the measurement levels of the variables, (2) analyzes all the variables at ones, and (3) allows us to include control variables if deemed needed. Finally, exporatory analysis will be executed, providing additional insights into the relationships.
 
 ## Preview of Findings 
-- Describe the gist of your findings (save the details for the final paper!)
-- How are the findings/end product of the project deployed?
-- Explain the relevance of these findings/product. 
+![Linear regression](gen/analysis/output/regressioncov_summary.png)
+
+The output in of the regression analysis indicated that (1) considering all products on average and keeping everything else constant, it is best to use a just-below price (.99) to maximize sales, (2) considering all products on average and keeping everything else constant, an increase in price is associated with a very small decrease in sales, and (3) when the price ending of a product is other or round, the effect of price on sales becomes less negative. 
+
+More interesting, the table below gives information on the effect of these variables per product category, giving managers the information needed to determine the ideal setting price. For example, when a product in the category Make-up needs to be priced, a round price is preferred; however, this is not the case for the product category Handmade gifts.
+
+![Linear regression output per product category](gen/analysis/output/model_coefficients_table.png)
 
 ## Repository Overview 
 ``` 
-- reporting
 - scr
  - analysis
  - data-preparation
+ - paper
 - .gitignore
 - README.md
 - makefile
@@ -57,6 +61,10 @@ install.packages("extrafont")
 install.packages("readr")
 install.packages("rmarkdown")
 install.packages("tinytex")
+install.packages("ggpubr")
+install.packages("gridExtra")
+install.packages("grid")
+install.packages("broom")
 ```
 
 ## Running Instructions 
@@ -75,7 +83,7 @@ make
 Additional:
 If you want to clean the directory (e.g., data output), run the following command:
 ```
-make wipe
+make clean
 ``` 
 
 ## About 
