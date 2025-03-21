@@ -1,0 +1,165 @@
+---
+title: "Final paper"
+author: "Anne van der Vliet"
+date: "2025-03-20"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, include = FALSE)
+```
+
+**This project estimates to what extent the use of just-below pricing (as opposed to round pricing) affects consumers' purchase behavior. In addition, it looks at how this relationship is affected by the price level of the product. In total, more than 2 million products from the Amazon UK website were included in this project, collected in 2023. The insights help price-setters determining whether to use just-below or round prices in order to maximize demand.**
+
+# Research motivation
+$2.99 for a chocolate bar, $19.99 for a sweater, $1199.99 for a smartphone and even stores devoted to selling products priced at $0.99 - prices set just below a round number are widely known around the globe (Tripathi & Pandey, 2018). A recent pilot study, including more than 12.000 prices from web pages in the United States and Germany, concluded that these prices make up almost 65% of prices on the internet (Troll et al., 2024), highlighting the popularity of this strategy. One explanation for the popularity is that just-below prices lead to an underestimation effect, where prices ending in $0.99 (e.g., $14.99) are perceived as substantially lower than their round counterparts, positively affecting demand (Chang & Chen, 2014). As a result, one might argue that it is beneficial for price-setters to price their products and services just below the round number.
+
+However, results regarding the effectiveness of just-below pricing are mixed. Where studies conclude that just-below pricing has a positive effect on consumers' purchase decisions (Choi et al., 2014; Schindler & Kibarian, 2001), others report no or even a negative effect (Georgoff, 1972, Kim, Malkoc & Goodman, 2021; Tripathi & Pandey, 2018). As a result, for this project, we investigated the effectiveness of just-below pricing on consumers' purchase decisions by analyzing a large Amazon dataset from the UK consisting of more than 2 million products. In addition, it was tested whether this effect differed based on the price level of the product. By investigating the moderating effect of price level, possible reasons for the conflicting findings might be found, which adds to the existing knowledge regarding just-below pricing.
+
+# Relevance
+As indicated before, the conclusions regarding the effectiveness of just-below pricing are mixed. By looking into the moderating effect of price level, the conflicting findings might be reconciled and additional knowledge regarding the use of just-below pricing might be added to the literature. In addition, these insights are of vital interest to price-setters who are contemplating the use of just-below pricing to drive demand. Specifically, the article provides answers to when and why the use of just-below pricing might (not) be preferred in a given context, providing price-setters with the needed information on how to price their goods.
+
+# Research question
+**To what extent does just below pricing (as opposed to round pricing) affect consumers' purchase behavior and to what extent does this effect depend on the price level of the product?**
+
+# Method
+First, the data will be prepared for the analysis by removing missing and inaccurately recorded data. In addition, the variables needed for the analysis will be operationalized. Next, the data will be explored using ggplot and going over the summary statistics. Additionally, preliminary data analysis will be executed and the research question will be answered via the use of a multiple linear regression. 
+
+A multiple linear regression is a suitable method as (1) it can deal with the measurement levels of the variables, (2) analyzes all the variables at ones, and (3) allows us to include control variables if deemed needed. Finally, exporatory analysis will be executed, providing additional insights into the relationships.
+
+# Data
+For this project, a large dataset from [Kaggle](https://www.kaggle.com/datasets/asaniczka/amazon-uk-products-dataset-2023) was used, consisting of more than 2 million Amazon products from the UK. The data was scraped in October 2023 and, after data cleaning and variable operationalization, included the following variables:
+
+![Variable overview](../../gen/data-preparation/output/variable_overview_table.png)
+
+# Data exploration
+The data exploration acts as a stepping stone for the main analysis.
+
+### Price ending distribution 
+First, we have looked at the price ending distribution for all products (see figure 2). As can be seen based on the output, most products are priced at 0.99, indicating the popularity of this pricing strategy. Next, most products are priced at a round price.
+
+![Price ending Distribution](../../gen/analysis/output/OverallDistrPriceEnding.png) 
+
+Next, we have looked at the distribution of price endings for the top 10 categories (see next page). 
+
+![Price ending Distribution Top 10](../../gen/analysis/output/OverallDistrPriceEndingTop10.png) 
+
+As can be seen, again, most products are priced at 0.99, indicating the popularity of this pricing strategy. Next, most products are priced at a round price. **The output also shows us that the price ending distribution is fairly the same for all products compared to the top 10 categories; hence, the remainder of the analysis will be performed on the top 10 product category data set.**
+
+Our next step is to Zoom in on prices ending in .90 until .00 to get a better idea of how just-below pricing is used in practice (see figure 3). That is, do must price-setters use .99 when pricing their product just below, or are price endings like .98 and 0.97 equally popular (something that is difficult to observe from the overall distribution). 
+
+![Distribution endings .90 until .00 Top 10](../../gen/analysis/output/DistrPriceEndingZoomedTop10.png) 
+
+As can be seen, prices ending in .99 are considered most popular, as they are used the most. Excluding round prices, we can also see that prices ending in .98 and .95 are popular.
+
+### Price ending distribution per Product Category
+In the final step of our data exploration, we have zoomed in on the top 10 categories. For each category, we have looked at the overall distribution of price endings (.00 until .99) as well as the distribution of price endings ranging from .90 to .00. 
+
+What can be seen is that the popularity of .99 pricing depends on the product category. For example, in the category Sports & Outdoor, this pricing strategy is highly popular (more so than round prices); however, in the categories Handmade Gifts and Frangances, round prices are more popular. 
+
+**The output of this final step can be found in appendix 1 of the paper.**
+
+# Preliminary data analysis
+## Dataset
+As indicated before, the distribution regarding the use of just-below vs. round is fairly the same for the entire dataset and the top 10 product category dataset, hence, the analysis will be performed on the top 10 product category dataset.
+
+## Descriptive statistics
+First we present some descriptive statistics below to get a first feeling of the data (see figure 5). As can be seen from the table, the proportion of products priced as just-below differs per product category.
+
+![Decriptive Statistics](../../gen/analysis/output/DescriptivesTable.png)
+
+## ANOVA main effect IV-DV
+Before the main analysis is performed, we have looked at the direct effect of the IV (price strategy) on the DV (sales) via an ANOVA (see figure 6 and 7). The output of the ANOVA is presented below:
+
+![ANOVA output](../../gen/analysis/output/anova_output.png)
+
+![Post-Hoc test](../../gen/analysis/output/TukeyHSD_table.png)
+
+Based on the ANOVA, one can see a significant effect of pricing strategy on sales. Specifically, when looking at the post-hoc test, there is a significant difference between all groups (round, just-below and other). The means table shows that a round price results in the highest sales, after which a just-below price is best (see figure 8). 
+
+![Means table](../../gen/analysis/output/MeansTable.png)
+
+This might; however, differ depending on the price of the product. The main analysis will inspect this further. 
+
+## Linear regression price on sales
+In addition, before the main analysis, we have looked at the main effect of the MOD (price) on the DV (sales of the product). The output is presented in figure 9.
+
+![Linear Regression](../../gen/analysis/output/PriceLevelmodel_summary.png)
+
+Based on the linear regression, there is a negative relationship visible between price (MOD) and sales (DV). In the main analysis, the interaction between price and pricing strategy will be considered. In addition, this will individually analyzed for every product category.
+
+#Main analysis
+For the main analysis, a multiple linear regression was run looking at the effect of pricing strategy, price level, and the interaction on sales. In addition, star rating was included as a control variable. As can be seen from the output, see figure 10, a significant model was created, F(6, 967647) = 1.308, p < 2.2e-16, R2 = 0.07502.
+
+![Regression output with covariates](../../gen/analysis/output/regressioncov_summary.png)
+
+## Main effect IV on DV
+Regarding the independent variable (Price Strategy), just-below pricing is treated as the baseline. As can be seem from the analysis, all coefficients are significant. Zooming in on the effect of the IV on the DV, the following conclusions can be made:
+
+- When the price ending of a product is other (between .01 and 0.98), compared to a just below price ending (.99), the sales decrease by -0.06744 units on average (b=-6.744e-02, t= -36.806, p< .000). This effect is significant; however, very small.
+- When the price ending of a product is round (.00), compared to a just below price ending (.99), the sales decrease by -0.06873 units on average (b=-6.873e-02, t= -18.099, p< .000). This effect is significant; however, very small.
+
+**This indicates that, considering all products on average and keeping everything else constant, it is best to use a just-below price (.99) to maximize sales.**
+
+## Main effect MOD on DV
+Looking at the direct effect of price (MOD) on sales (DV), for every 1 unit increase in price, sales decrease by 0.00005274 units (b=-5.274e-05, t= -11.853, p< .000). This effect is significant; however, very small.
+
+**This indicates that, considering all products on average and keeping everything else constant, an increase in price is associated with a very small decrease in sales**
+  
+## Interaction effect IV*MOD on DV
+Looking at the interaction term: 
+- When the price ending of a product is other (between .01 and 0.98), the effect of price on sales becomes less negative by 0.00004317 units in sales per 1 unit increase in price (b=4.317e-05, t= 8.724, p< .000).
+- When the price strategy is round (.00), the effect of price on sales becomes less negative by 0.00003087 units in sales per 1 unit increase in price (b=3.087e-05, t=4.679, p< .000).
+
+## Effect covariate
+Looking at the direct effect of star rating (covariate), for every 1 unit increase in star rating, sales increase by 0.01089 units (b=-1.089e-01, t= 268.862, p< .000). This effect is significant; however, very small. 
+
+## Main analysis per product category
+However, as the data exploration hints that the effects might differ depending on the product category, we have run a multiple linear regression for every product category. The results are summarized in figure 11. **This table allows price-setters to determine which pricing strategy is prefferable depending on the price of the product, as well as the product category**.
+
+![Regression output with covariates per product category](../../gen/analysis/output/model_coefficients_table.png)
+
+# Conclusion
+In this paper, we looked at to what extent just below pricing (as opposed to round pricing) affected consumers' purchase behavior and to what extent this effect depended on the price level of the product. In order to answer this question, multiple linear regression was run to determine which pricing strategy is best to use depening on the price of the product, in addition, we split this up for the different product categories. 
+
+The output in figure 10 indicates that (1) considering all products on average and keeping everything else constant, it is best to use a just-below price (.99) to maximize sales, (2) considering all products on average and keeping everything else constant, an increase in price is associated with a very small decrease in sales, and (3) when the price ending of a product is other or round, the effect of price on sales becomes less negative.
+
+More interesting, figure 11 gives information on the effect of these variables per product category, giving managers the information needed to determine the ideal setting price. For example, when a product in the category Make-up needs to be priced, a round price is preferred; however, this is not the case for the product category Handmade gifts. 
+
+# References
+Choi, J., Li, Y. J., Rangan, P., Chatterjee, P., & Singh, S. N. (2014). The odd-ending price justification effect: The influence of price-endings on hedonic and utilitarian consumption. Journal of the Academy of Marketing Science, 42(5), 545–557. https://doi.org/10.1007/s11747-014-0369-6
+
+Georgoff, D. M. (1972). Odd-even retail price endings: Their effects on value determination, product perception, and buying propensities.
+
+Kim. J., Malkoc, S.A., Goodman, J.K., (2022). The Threshold-Crossing Effect: Just-Below Pricing Discourages Consumers to Upgrade, Journal of Consumer Research, 48(6), 1096–1112. https://doi.org/10.1093/jcr/ucab049
+
+Chang, H.-H., & Chen, F.-P. (2014). When is a 9-ending price perceived lower than a 0-ending price? The moderating role of price consciousness. International Journal of Business and Information, 9(1), 89–116.
+
+Schindler, R. M., & Kibarian, T. M. (2001). Image communicated by the use of 99 endings in advertised prices. Journal of Advertising, 30(4), 95–99. https://doi.org/10.1080/00913367.2001.10673654
+
+Tripathi, A., & Pandey, N. (2018) Are Nine-Ending Prices Equally Influential in Eastern Culture for Pricing Green Products?, Journal of International Consumer Marketing, 30(3), 192-205. https://doi.org/10.1080/08961530.2017.1384711
+
+Troll, E. S., Frankenbach, J., Friese, M., & Loschelder, D. D. (2024). A meta‐analysis on the effects of just‐below versus round prices. Journal of Consumer Psychology, 34(2), 299–325. https://doi.org/10.1002/jcpy.1353
+
+# Appendix 1
+For each category, we have looked at the overall distribution of price endings (.00 until .99) as well as the distribution of price endings ranging from .90 to .00.
+
+![Distribution Bath Body](../../gen/analysis/output/Price_Ending_Bath___Body.png)
+
+![Distribution Fragrances](../../gen/analysis/output/Price_Ending_Fragrances.png)
+
+![Distribution Handmade Artwork](../../gen/analysis/output/Price_Ending_Handmade_Artwork.png)
+
+![Distribution Handmade Artwork](../../gen/analysis/output/Price_Ending_Handmade_Artwork.png)
+
+![Distribution Handmade Gifts](../../gen/analysis/output/Price_Ending_Handmade_Gifts.png)
+
+![Distribution Make up](../../gen/analysis/output/Price_Ending_Make_up.png)
+
+![Distribution Manicure Pedicure](../../gen/analysis/output/Price_Ending_Manicure___Pedicure_Products.png)
+
+![Distribution Skin Care](../../gen/analysis/output/Price_Ending_Skin_Care.png)
+
+![Distribution Sports Outdoors](../../gen/analysis/output/Price_Ending_Sports___Outdoors.png)
+
+![Distribution Women](../../gen/analysis/output/Price_Ending_Women.png)
