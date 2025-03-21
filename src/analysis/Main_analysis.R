@@ -17,24 +17,13 @@ ggplot(Amazon_UK_Top10, aes(SalesLastMonth))+ geom_histogram(binwidth = 25)+ xli
 Amazon_UK_Top10$SalesLastMonthAdjusted <- Amazon_UK_Top10$SalesLastMonth + 1
 Amazon_UK_Top10$SalesLog <- log(Amazon_UK_Top10$SalesLastMonthAdjusted)
 
-# Regression
-## Run a linear regression that looks at the effect of Price strategy and Price of the product (as well as the interaction) on sales.
-MainLinModel <- lm(SalesLog ~ Price_Strategy + Price_Strategy * Price, data = Amazon_UK_Top10)
-summary(MainLinModel)
-### Save output as PNG
-model_summary <- summary(MainLinModel)
-model_text <- capture.output(model_summary)
-text_grob <- textGrob(paste(model_text, collapse = "\n"), gp = gpar(fontsize = 10, fontfamily = "mono"))
-ggsave("../../gen/analysis/output/regression_summary.png", plot = text_grob, width = 10, height = 8, dpi = 300)
-
 ## Include star rating as a covariate
 MainLinModelcov <- lm(SalesLog ~ Price_Strategy + Price_Strategy * Price + StarRating, data = Amazon_UK_Top10)
-summary(MainLinModelcov)
 ### Save output as PNG
 model_summary2 <- summary(MainLinModelcov)
 model_text2 <- capture.output(model_summary2)
 text_grob <- textGrob(paste(model_text2, collapse = "\n"), gp = gpar(fontsize = 10, fontfamily = "mono"))
-ggsave("../../gen/analysis/output/regressioncov_summary.png", plot = text_grob, width = 10, height = 8, dpi = 300)
+ggsave("../../gen/analysis/output/regressioncov_summary.png", plot = text_grob, width = 8, height = 6, dpi = 300)
 
 ## Run a regression for every product category separately
 result <- Amazon_UK_Top10 %>%

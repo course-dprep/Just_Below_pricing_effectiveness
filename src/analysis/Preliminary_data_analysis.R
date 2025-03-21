@@ -29,7 +29,7 @@ DescriptivesTable <- Amazon_UK_Top10 %>%
             MinPrice = paste0("$", (min(Price, na.rm = TRUE))),
             AverageReviewRating = round(mean(StarRating, na.rm = TRUE), 1))
 # Save table as PNG
-png("../../gen/analysis/output/DescriptivesTable.png", width = 1200, height = 600)  # Adjust dimensions as needed
+png("../../gen/analysis/output/DescriptivesTable.png", width = 950, height = 300)  # Adjust dimensions as needed
 grid.table(DescriptivesTable)
 dev.off()
 
