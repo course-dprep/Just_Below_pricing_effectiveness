@@ -24,6 +24,7 @@ model_summary2 <- summary(MainLinModelcov)
 model_text2 <- capture.output(model_summary2)
 text_grob <- textGrob(paste(model_text2, collapse = "\n"), gp = gpar(fontsize = 10, fontfamily = "mono"))
 ggsave("../../gen/analysis/output/regressioncov_summary.png", plot = text_grob, width = 8, height = 6, dpi = 300)
+ggsave("regressioncov_summary.png", plot = text_grob, width = 8, height = 6, dpi = 300)
 
 ## Run a regression for every product category separately
 result <- Amazon_UK_Top10 %>%
@@ -36,3 +37,4 @@ result <- Amazon_UK_Top10 %>%
 ### Save output as PNG
 grid_table <- tableGrob(result)
 ggsave("../../gen/analysis/output/model_coefficients_table.png", plot = grid_table, width = 10, height = 20, dpi = 300)
+ggsave("model_coefficients_table.png", plot = grid_table, width = 10, height = 20, dpi = 300)
